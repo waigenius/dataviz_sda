@@ -14,3 +14,4 @@ pdfminer.six==20250506
 spacy==3.8.7
 wordcloud==1.9.4
 cufflinks==0.17.3
+plotly==5.22.0
