@@ -56,7 +56,16 @@ Craigslist Cars & Trucks (Kaggle)
 # Titre principal et introduction
 st.title("Analyse des annonces de véhicules d'occasion - Craigslist Cars & Trucks")
 st.markdown(
-    "Cette application permet de nettoyer, explorer et visualiser un jeu de données de plus de 400 000 annonces Craigslist."
+    """
+    Comprendre le marché des véhicules d'occasion est essentiel dans un secteur automobile en constante évolution, tant pour les professionnels que pour les particuliers. Cette application Streamlit est conçue dans le but précis d'éclairer ce marché complexe à travers une analyse de données approfondie.       
+
+Elle vise à :
+* **Éclairer les motivations d'achat :** Mettre en lumière les facteurs clés qui influencent la décision d'acquérir un véhicule d'occasion.
+* **Comprendre les dynamiques du marché :** Fournir des outils d'exploration de données pour identifier les tendances, les spécificités des différentes catégories de véhicules et les évolutions de prix.
+* **Faciliter la prise de décision :** Transformer les données brutes en informations concrètes et visuelles, utiles tant pour les acheteurs et vendeurs que pour les analystes du secteur. 
+
+En somme, notre but est de démystifier le marché VO en rendant les données parlantes et en offrant des perspectives claires sur ses composantes essentielles
+    """
 )
 
 # Chargement des données
