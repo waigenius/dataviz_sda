@@ -173,12 +173,16 @@ with tab5:
             sel_fuel = st.multiselect('Carburants', fuels, default=[])
             cyls = sorted(df['cylinders'].dropna().unique())
             sel_cyl = st.multiselect('Cylindres', cyls, default=[])
+            cond = sorted(df['condition'].dropna().unique())
+            sel_cond = st.multiselect('Condition', cond, default=[])
 
         with col2:
             trans = sorted(df['transmission'].dropna().unique())
             sel_trans = st.multiselect('Transmission', trans, default=[])
             drives = sorted(df['drive'].dropna().unique())
             sel_drive = st.multiselect('Roues motrices', drives, default=[])
+            size = sorted(df['size'].dropna().unique())
+            sel_size = st.multiselect('Taille', size, default=[])
 
         top_n = st.slider('Top N modèles', 5, 20, 10)
 
