@@ -118,8 +118,21 @@ with tab0:
     df.info(buf=buf)
     info_str = buf.getvalue()
     st.text(info_str)
-    st.subheader("Statistiques descriptives")
-    st.write(df.describe(include='all'))
+    # Statistiques pour les colonnes numériques
+    st.subheader("Statistiques descriptives numériques")
+    # Sélectionne les colonnes numériques
+    numeric_cols = df.select_dtypes(include=np.number).columns
+    if not numeric_cols.empty:
+        st.write(df[numeric_cols].describe())
+    else:
+        st.info("Aucune colonne numérique trouvée dans le dataset.")
+    # Statistiques pour les colonnes catégorielles
+    st.subheader("Statistiques descriptives catégorielles")
+    categorical_description = df.describe(include='object')
+    if not categorical_description.empty:
+        st.dataframe(categorical_description)
+    else:
+        st.info("Aucune colonne catégorielle (type 'object') trouvée dans le dataset.")
 
 # 1. Distribution des prix
 tab1 = tabs[1]
