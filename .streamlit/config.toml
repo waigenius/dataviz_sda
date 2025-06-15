@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#bfa15a"              # Or champagne – pour les boutons ou accents
+backgroundColor = "#0f1115"           # Noir profond – ambiance showroom luxe
+secondaryBackgroundColor = "#1c1f26"  # Gris anthracite – pour les encadrés
+textColor = "#e5e5e5"                 # Gris clair – contraste lisible
+font = "serif"                        # Style plus raffiné qu’un sans serif

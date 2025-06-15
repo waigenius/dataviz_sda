@@ -4,7 +4,7 @@
 Projet analyse de données
 
 Lien du dataset :  https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data
-
+Lancement de l'app : python -m streamlit run app.py
 
 Étapes de réflexion et préparation des données
 1. Suppression des colonnes non utiles
