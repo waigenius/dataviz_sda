@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 # Création de la bannière
-img = Image.open("Images/banner-car.jpg").resize((1200, 150))
+img = Image.open("images/banner-car.jpg").resize((1200, 150))
 st.image(img, use_container_width=True)
 
 
@@ -79,14 +79,22 @@ col3.metric("Modèles uniques", df['model'].nunique())
 
 st.markdown("---")
 
+
+
 # Création des onglets
+
+# Chargement du wordcloud pour onglet dédié
+wordcloud_img = Image.open("images/wordcloud.png")
+
+# Définir les onglets
 all_tabs = [
     "Exploration dataset",
     "Distribution des prix",
     "Décote selon l'âge",
     "Répartition géographique",
     "Prix vs kilométrage",
-    "Analyse par modèle"
+    "Analyse par modèle",
+    "Nuage de mots"
 ]
 tabs = st.tabs(all_tabs)
 
@@ -203,6 +211,20 @@ with tab5:
         labels={'model':'Modèle','price':'Prix moyen ($)'}
     )
     st.plotly_chart(fig_mod, use_container_width=True)
+    
+# 6. Nuage de mots (wordcloud)
+tab6 = tabs[6]
+with tab6:
+    st.header("6. Nuage de mots basé sur un article")
+    st.image(wordcloud_img, caption="Nuage de mots des termes les plus fréquents de l'article séléctionné", use_container_width=True)
+    st.markdown(    """
+    <div style="text-align: center;">
+        <a href="https://presse.leboncoincorporate.com/actualites/le-bon-observatoire-des-vehicules-doccasion-07023-763e3.html" target="_blank">
+            Lien de l’article utilisé
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True)
 
 # Footer
 st.markdown("---")

@@ -6,41 +6,173 @@ Projet analyse de données
 Lien du dataset :  https://www.kaggle.com/datasets/austinreese/craigslist-carstrucks-data
 Lancement de l'app : python -m streamlit run app.py
 
-Étapes de réflexion et préparation des données
-1. Suppression des colonnes non utiles
-Certaines colonnes du dataset ne sont pas pertinentes pour notre analyse, car elles ne contiennent pas d’informations exploitables d’un point de vue statistique ou visuel :
-url, region_url, image_url : adresses web non exploitables en visualisation ou en analyse.
-description: informations spécifiques à chaque annonce, non utiles pour des analyses globales. (potentiellement utile pour dédoublonnage ?)
-Décision : Suppression de ces colonnes pour alléger le dataset et se concentrer sur les variables analytiques.
+Part 1 : Nettoyage et Analyse Exploratoire d’un Dataset de Véhicules
 
-2. Formatage de la date de publication
-La colonne posting_date est initialement au format texte.
-Transformation : Conversion au format datetime (jour/mois/année) avec pd.to_datetime().
-Création possible d’une colonne dérivée year_posted pour analyser les tendances temporelles.
-Justification : Permet d’effectuer des regroupements temporels (par mois, trimestre…) et de filtrer les publications récentes.
+Objectif
+Ce projet vise à nettoyer, analyser et préparer un jeu de données de véhicules d'occasion afin de permettre des analyses fiables sur les prix, les caractéristiques techniques, et les tendances du marché automobile.
 
-3. Suppression des lignes incomplètes
-Certaines lignes présentent des valeurs manquantes dans des colonnes essentielles à l’analyse :
-price, year, manufacturer, model, odometer, condition…
-Décision : Définir les variables critiques et suppression des lignes ayant des valeurs manquantes sur ces variables.
-Justification : Ces informations sont nécessaires pour toute analyse descriptive ou modélisation. Les conserver créerait du bruit dans l’analyse.
+Équipe
+Projet réalisé par Waï LEKONE et Damien KOHLER
 
-4. Traitement des valeurs incohérentes
-Certaines annonces ont : Un price = 0 (don gratuit ou erreur)
-Un price très élevé (> 250 000 $)
-Un year irréaliste (avant 1950 ou après l’année actuelle)
-Un odometer très faible (ex : 1) ou excessif (> 500 000)
-Décision : Supprimer les annonces à price <= 1000 ou price > 250000
-Supprimer les années incohérentes
-Supprimer les valeurs aberrantes sur odometer via un filtre ou IQR
-Justification : Ces valeurs faussent les statistiques globales et les visualisations. Une borne réaliste permet une analyse plus fiable.
+---
 
-5. Suppression des doublons
-Pour identifier les doublons, nous utilisons les colonnes clés suivantes : price, year, manufacturer, model, condition, cylinders, et éventuellement posting_date.
-Décision : Détection des doublons sur cette combinaison, puis suppression des doublons exacts.
-Justification : De nombreuses annonces sont postées plusieurs fois ou apparaissent dans des régions voisines. Les doublons gonflent artificiellement les volumes et biaisent les statistiques.
+Étapes du projet
 
-6. Autres traitements possibles
-Homogénéisation des libellés : nettoyage des valeurs catégorielles (ex : standardiser good, Good, GOOD)
-Suppression des valeurs rares dans certains champs (ex : catégories type avec < 1% des annonces)
-Remplissage conditionnel : certaines valeurs manquantes peuvent être imputées si d’autres champs sont suffisamment renseignés
+1. Chargement et exploration initiale (`vehicles.csv`)
+- Lecture du fichier CSV
+- Exploration des dimensions, types de colonnes et valeurs
+- Premières statistiques descriptives (numeriques & catégorielles)
+
+2. Nettoyage du dataset
+
+Corrections de types
+- Conversion de `posting_date` en `datetime`
+- Nettoyage de la colonne `cylinders` (suppression de texte inutile, détection des `NaN`)
+
+Gestion des valeurs manquantes
+- Imputation conditionnelle de `condition` en fonction de `title_status`
+- Méthode d’imputation avancée par modèle pour `manufacturer`, `drive`, `fuel`, etc.
+  - Méthode : remplissage par mode local ou tirage aléatoire basé sur la distribution observée
+- Vérification des proportions conservées avant/après
+
+Suppression de données inutiles ou bruitées
+- Colonnes supprimées : `id`, `url`, `region`, etc.
+- Lignes supprimées :
+  - Véhicules non roulants (`salvage`, `parts only`)
+  - Lignes avec `NaN` critiques (`price`, `year`, `model`, etc.)
+
+Détection des doublons
+- Dédoublonnage avec `VIN` + `posting_date`
+- Deuxième passe sans `VIN` via combinaison `price`, `year`, `model`, etc.
+
+Gestion des valeurs aberrantes
+- Odometer : gardé entre `100` et `300 000` miles
+- Year : borné entre `1950` et `2021`
+- Price : borné entre `500` et `150 000`
+
+---
+Axes d’analyse proposés
+1. Distribution du prix
+2. Décote selon l’âge (nouvelle variable : `vehicle_age`)
+3. Analyse géographique par État
+4. Prix en fonction du kilométrage et de l’état
+5. Analyse par marque et modèle
+---
+Export
+Le DataFrame nettoyé est enregistré sous le nom :  
+df.to_csv("vehicles_clean.csv", index=False)
+
+
+Part 2 : Application Streamlit - Craigslist Cars & Trucks
+
+Objectif
+Déployer une application interactive permettant de visualiser et d’explorer un large dataset (> 400 000 lignes) d’annonces de véhicules d’occasion issues de Craigslist (USA), préalablement nettoyé.
+
+---
+
+Technologies utilisées
+- Streamlit : framework Python pour créer des interfaces interactives
+- Plotly Express : visualisation interactive (graphiques dynamiques)
+- Pandas / NumPy : traitement et nettoyage des données
+- Pillow : gestion des images (bannière)
+
+---
+
+Fichiers nécessaires
+- `vehicles_clean.csv` : dataset nettoyé (export de la 1ère partie)
+- `Images/banner-car.jpg` : bannière d’en-tête
+- `app.py` : fichier principal de l'application (code ci-dessus)
+
+---
+
+Structure de l’application
+
+Sidebar (menu latéral)
+- Contexte du projet (Sorbonne Data Analytics - Session 6)
+- Objectifs pédagogiques
+- Description du dataset et des traitements effectués
+- Membres du groupe
+
+---
+
+Onglets interactifs
+
+1. Exploration du dataset
+- Aperçu des premières lignes
+- Structure du DataFrame (`info()`)
+- Statistiques descriptives
+
+2. Distribution des prix
+- Histogramme dynamique des prix
+- Filtre interactif sur la plage de prix
+
+3. Décote selon l'âge
+- Nuage de points `vehicle_age` vs `price`
+- Régression linéaire pour illustrer la décote
+
+4. Répartition géographique
+- Carte des USA avec le nombre d’annonces par État (choroplèthe)
+
+5. Prix vs Kilométrage
+- Nuage de points `odometer` vs `price`, coloré par `condition`
+- Permet d’analyser l’usure en lien avec le prix
+
+6. Analyse par modèle
+- Filtres multi-critères : carburant, transmission, condition, etc.
+- Top N modèles par prix moyen
+- Graphique en barres
+
+---
+
+KPIs affichés
+- Nombre total d’annonces
+- Prix moyen
+- Nombre de modèles uniques
+
+Part 3 - Analyse de texte - Text Mining sur un article PDF
+
+Objectif  
+Cette partie vise à appliquer des techniques de text mining en français sur un article au format PDF afin d'extraire, nettoyer et analyser le contenu textuel. L'objectif final est de générer un nuage de mots basé sur les termes les plus significatifs.
+
+Technologies utilisées  
+- pdfminer.six : extraction de texte depuis un PDF  
+- spaCy (modèle `fr_core_news_sm`) : traitement du langage naturel  
+- wordcloud : visualisation du vocabulaire le plus fréquent  
+- collections.Counter : calcul des fréquences  
+- re, os : gestion système et expressions régulières
+
+Étapes du processus
+
+1. Extraction du texte depuis un fichier PDF  
+La fonction `extract_text_from_pdf(pdf_path)` utilise `pdfminer` pour lire le texte brut du fichier PDF spécifié.  
+Elle vérifie si le fichier existe, puis extrait et retourne le contenu textuel.  
+
+2. Prétraitement linguistique  
+Un pipeline spaCy en français est utilisé pour nettoyer le texte extrait :  
+- Conversion en minuscules  
+- Suppression de la ponctuation, des chiffres, des mots vides (stopwords)  
+- Conservation uniquement des mots alphabétiques (lettres)  
+- Lemmatisation : réduction des mots à leur forme racine  
+- Élimination des tokens trop courts (≤ 1 lettre)
+
+3. Comptage des occurrences  
+Le module `Counter` permet de compter les fréquences des lemmes obtenus.  
+Un aperçu des 50 premiers tokens est affiché, ainsi que le top 20 des mots les plus fréquents.  
+
+4. Nuage de mots (à faire si besoin)  
+Les mots nettoyés et comptés peuvent ensuite être utilisés pour créer un nuage de mots (`WordCloud`).  
+Ce fichier se concentre sur l'extraction et le prétraitement ; l'affichage graphique est à ajouter si nécessaire.
+
+Remarques importantes  
+- Le modèle spaCy `fr_core_news_sm` doit être installé manuellement avant exécution :  
+  `python -m spacy download fr_core_news_sm`  
+- Le PDF à analyser doit être nommé `article_VO.pdf` et présent dans le répertoire du script
+
+Limites  
+- Le nuage de mots n’est pas généré automatiquement dans cette version (visualisation à ajouter si souhaité)  
+- La qualité du texte extrait dépend fortement de la qualité du PDF (PDF scanné non pris en charge)
+
+Exemple d'exécution  
+- Affiche un aperçu des 500 premiers caractères du texte extrait  
+- Liste les 50 premiers tokens prétraités  
+- Affiche les 20 mots les plus fréquents du texte après nettoyage linguistique
