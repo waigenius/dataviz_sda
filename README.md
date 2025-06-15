@@ -122,6 +122,9 @@ Onglets interactifs
 - Top N modèles par prix moyen
 - Graphique en barres
 
+7. Nuage de mots
+- Affichage de l'image nuage de mots générée par le text mining
+
 ---
 
 KPIs affichés
@@ -159,20 +162,11 @@ Un pipeline spaCy en français est utilisé pour nettoyer le texte extrait :
 Le module `Counter` permet de compter les fréquences des lemmes obtenus.  
 Un aperçu des 50 premiers tokens est affiché, ainsi que le top 20 des mots les plus fréquents.  
 
-4. Nuage de mots (à faire si besoin)  
-Les mots nettoyés et comptés peuvent ensuite être utilisés pour créer un nuage de mots (`WordCloud`).  
-Ce fichier se concentre sur l'extraction et le prétraitement ; l'affichage graphique est à ajouter si nécessaire.
+4. Nuage de mots 
+Les mots nettoyés et comptés sont utilisés pour créer un nuage de mots (`WordCloud`).  
+L'image est sauvegardé dans le dossier "image" pour affichage sur l'application.
 
 Remarques importantes  
 - Le modèle spaCy `fr_core_news_sm` doit être installé manuellement avant exécution :  
   `python -m spacy download fr_core_news_sm`  
 - Le PDF à analyser doit être nommé `article_VO.pdf` et présent dans le répertoire du script
-
-Limites  
-- Le nuage de mots n’est pas généré automatiquement dans cette version (visualisation à ajouter si souhaité)  
-- La qualité du texte extrait dépend fortement de la qualité du PDF (PDF scanné non pris en charge)
-
-Exemple d'exécution  
-- Affiche un aperçu des 500 premiers caractères du texte extrait  
-- Liste les 50 premiers tokens prétraités  
-- Affiche les 20 mots les plus fréquents du texte après nettoyage linguistique
