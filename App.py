@@ -103,10 +103,6 @@ with tab0:
     st.text(info_str)
     st.subheader("Statistiques descriptives")
     st.write(df.describe(include='all'))
-    st.subheader("Valeurs manquantes par colonne")
-    missing = df.isna().sum().to_frame('missing_count')
-    missing['missing_pct'] = (missing['missing_count'] / len(df)) * 100
-    st.dataframe(missing)
 
 # 1. Distribution des prix
 tab1 = tabs[1]
